@@ -26,10 +26,10 @@ import javax.swing.*;
  */
 
 @State(
-        name="SettingConfig",
+        name="PonyTailSettingConfig",
         storages= {
                 @Storage(
-                        file = StoragePathMacros.APP_CONFIG + "/logViewerSetting.xml"
+                        file = StoragePathMacros.APP_CONFIG + "/PonyTailSetting.xml"
                 )}
 )
 public class Settings implements ApplicationComponent, Configurable, PersistentStateComponent<SettingConfig> {

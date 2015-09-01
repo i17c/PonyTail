@@ -22,10 +22,10 @@ import java.util.LinkedHashMap;
  */
 
 @com.intellij.openapi.components.State(
-        name = "LogViewerConfig",
+        name = "PonyTailConfig",
         storages = {
                 @Storage(id = "default", file = StoragePathMacros.PROJECT_FILE),
-                @Storage(id = "dir", file = StoragePathMacros.PROJECT_CONFIG_DIR + "/logViewer.xml", scheme = StorageScheme.DIRECTORY_BASED)
+                @Storage(id = "dir", file = StoragePathMacros.PROJECT_CONFIG_DIR + "/PonyTail.xml", scheme = StorageScheme.DIRECTORY_BASED)
         }
 )
 public class ConfigHolder implements PersistentStateComponent<ConfigHolder>, Serializable {
