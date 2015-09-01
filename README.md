@@ -1,3 +1,5 @@
+IDEA插件官方下载地址为 [https://plugins.jetbrains.com/plugin/7934](https://plugins.jetbrains.com/plugin/7934) 
+
 <br>It's a tool for track log as cat / tail command.
       <br>1. you can bind log trackers with a project.
       <br>2. it support big logs.
