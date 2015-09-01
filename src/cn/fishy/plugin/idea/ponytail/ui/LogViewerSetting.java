@@ -190,7 +190,7 @@ public class LogViewerSetting extends JDialog {
         try{
             pos = Long.parseLong(TEXT_seekPos.getText());
         }catch (Exception e){}
-        String info = "Print Log From " + (seekType.isSeekHead() ? "HEAD" : "TAIL") + " by " + (seekType.isSeekLine() ? "Lines" : "Pos") + " at "+ (seekType.isSeekLine() ? "Line" : "Pos") + " " + pos;
+        String info = "Print From " + (seekType.isSeekHead() ? "HEAD" : "TAIL") + " by " + (seekType.isSeekLine() ? "Lines" : "Pos") + " at "+ (seekType.isSeekLine() ? "Line" : "Pos") + " " + pos;
         LABEL_seek.setText(info);
     }
 
