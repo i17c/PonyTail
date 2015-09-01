@@ -82,7 +82,7 @@ public class LogViewerSetting extends JDialog {
         BTN_choose.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 chooseFileOnlyDescriptor.setTitle("Select File");
-                chooseFileOnlyDescriptor.setDescription("Select HotCode2 jar path");
+                chooseFileOnlyDescriptor.setDescription("Select Log File To Track");
                 VirtualFile vf = null;
                 try{
                     vf = LocalFileSystem.getInstance().findFileByIoFile(new File(TEXT_path.getText()));
