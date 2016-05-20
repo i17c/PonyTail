@@ -15,12 +15,6 @@
  */
 package cn.fishy.plugin.idea.ponytail;
 
-import cn.fishy.plugin.idea.ponytail.constant.LogViewerIcons;
-import cn.fishy.plugin.idea.ponytail.constant.SeekType;
-import cn.fishy.plugin.idea.ponytail.domain.ViewLog;
-import cn.fishy.plugin.idea.ponytail.process.LogReader;
-import cn.fishy.plugin.idea.ponytail.process.TrackTimer;
-import cn.fishy.plugin.idea.ponytail.util.Matcher;
 import com.intellij.execution.impl.ConsoleViewUtil;
 import com.intellij.execution.impl.EditorHyperlinkSupport;
 import com.intellij.openapi.Disposable;
@@ -40,11 +34,14 @@ import com.intellij.openapi.editor.event.EditorMouseEvent;
 import com.intellij.openapi.editor.event.EditorMouseListener;
 import com.intellij.openapi.editor.ex.EditorMarkupModel;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
+import com.intellij.openapi.editor.markup.HighlighterTargetArea;
+import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.util.EditorPopupHandler;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.event.MouseEvent;
@@ -52,6 +49,15 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
+
+import cn.fishy.plugin.idea.ponytail.constant.LogViewerIcons;
+import cn.fishy.plugin.idea.ponytail.constant.SeekType;
+import cn.fishy.plugin.idea.ponytail.domain.ViewLog;
+import cn.fishy.plugin.idea.ponytail.colors.ColorFilter;
+import cn.fishy.plugin.idea.ponytail.persistence.ColorFilterHolder;
+import cn.fishy.plugin.idea.ponytail.process.LogReader;
+import cn.fishy.plugin.idea.ponytail.process.TrackTimer;
+import cn.fishy.plugin.idea.ponytail.util.Matcher;
 
 
 /**
@@ -149,6 +155,30 @@ public class Console implements Disposable {
         Document document = getConsoleEditor().getDocument();
         document.insertString(document.getTextLength(), s);
         EditorUtil.scrollToTheEnd(getConsoleEditor());
+        applyColorToRow(document.getLineCount()-1, s);
+    }
+
+    private void applyColorToRow(int row, String s)
+    {
+        ColorFilterHolder lFilterRegistry = ColorFilterHolder.getInstance();
+        ColorFilter lColorFilter = lFilterRegistry.getMatch(s);
+        if (lColorFilter != null)
+        {
+            Document document = getConsoleEditor().getDocument();
+
+            TextAttributes lTextAttributes = new TextAttributes();
+            lTextAttributes.setBackgroundColor(lColorFilter.getBg());
+            lTextAttributes.setForegroundColor(lColorFilter.getFg());
+
+            int lineStartOffset = document.getLineStartOffset(Math.max(0, row - 1));
+            int lineEndOffset = document.getLineEndOffset(Math.max(0, row - 1));
+
+            getConsoleEditor().getMarkupModel().addRangeHighlighter(lineStartOffset,
+                                                                    lineEndOffset,
+                                                                    3333,
+                                                                    lTextAttributes,
+                                                                    HighlighterTargetArea.LINES_IN_RANGE);
+        }
     }
 
     /**

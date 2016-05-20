@@ -41,6 +41,7 @@
         <applicationService serviceImplementation="cn.fishy.plugin.idea.ponytail.ui.LogViewerLayout"/>
         <applicationService serviceImplementation="cn.fishy.plugin.idea.ponytail.ui.LogViewerSetting"/>
         <applicationService serviceImplementation="cn.fishy.plugin.idea.ponytail.DefaultContentFactory"/>
+        <applicationService serviceImplementation="cn.fishy.plugin.idea.ponytail.persistence.ColorFilterHolder"/>
 
         <toolWindow id="PonyTail" anchor="bottom" secondary="true"
                     icon="/icons/printPreview.png" canCloseContents="true"
