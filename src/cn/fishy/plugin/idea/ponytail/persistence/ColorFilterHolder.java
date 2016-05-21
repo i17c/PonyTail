@@ -1,22 +1,4 @@
-/**
- ****************************************************************************
- *
- * $RCSfile$
- *
- * Andrew Stone
- *
- ****************************************************************************
- *
- * $Revision$
- *
- * $Id$
- *
- ****************************************************************************
- *
- * Copyright (c) 2012 Alcatel-Lucent Inc. All Rights Reserved.
- * Please read the associated COPYRIGHTS file for more details.
- *
- ****************************************************************************/
+
 package cn.fishy.plugin.idea.ponytail.persistence;
 
 import com.intellij.openapi.components.PersistentStateComponent;
