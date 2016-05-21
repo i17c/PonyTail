@@ -11,6 +11,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
@@ -37,6 +38,9 @@ public class ColorFilterSetting extends JDialog {
     private JButton addButton;
     private JButton removeButton;
     private JTable TABLE_filters;
+    private JButton upButton;
+    private JButton downButton;
+    private JButton copyButton;
     private Console console;
     private Project project;
 
@@ -59,6 +63,18 @@ public class ColorFilterSetting extends JDialog {
             }
         });
 
+        upButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                swap(true);
+            }
+        });
+
+        downButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                swap(false);
+            }
+        });
+
         addButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 onAdd();
@@ -68,6 +84,12 @@ public class ColorFilterSetting extends JDialog {
         removeButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 onRemove();
+            }
+        });
+
+        copyButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                onCopy();
             }
         });
 
@@ -251,6 +273,50 @@ public class ColorFilterSetting extends JDialog {
         }
 
         refreshTable();
+    }
+
+    private void onCopy() {
+        int[] lSelectedRow = TABLE_filters.getSelectedRows();
+        for (int lRow : lSelectedRow)
+        {
+            ColorFilter lClone = clonedData.get(lRow).clone();
+            clonedData.add(lClone);
+        }
+        if (lSelectedRow.length > 0) {
+            refreshTable();
+            TABLE_filters.setRowSelectionInterval(lSelectedRow[0], lSelectedRow[lSelectedRow.length-1]);
+        }
+    }
+
+    private void swap(boolean b) {
+        int[] lSelectedRow = TABLE_filters.getSelectedRows();
+        int adjustment = 0;
+        if (b)
+        {
+            if (lSelectedRow.length > 0 && lSelectedRow[0]  > 0)
+            {
+                adjustment--;
+                for (int lRow : lSelectedRow)
+                {
+                    Collections.swap(clonedData, lRow-1, lRow);
+                }
+            }
+        }
+        else
+        {
+            if (lSelectedRow.length > 0 && lSelectedRow[lSelectedRow.length - 1]  < clonedData.size() - 1)
+            {
+                adjustment++;
+                for (int lRow : lSelectedRow)
+                {
+                    Collections.swap(clonedData, lRow, lRow + 1);
+                }
+            }
+        }
+        if (lSelectedRow.length > 0) {
+            refreshTable();
+            TABLE_filters.setRowSelectionInterval(lSelectedRow[0] + adjustment, lSelectedRow[lSelectedRow.length-1] + adjustment);
+        }
     }
 
     private void onOK() {
