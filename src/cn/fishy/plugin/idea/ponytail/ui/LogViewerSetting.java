@@ -53,6 +53,7 @@ public class LogViewerSetting extends JDialog {
     private JTextField TEXT_filter;
     private JComboBox SELECT_charset;
     private JComboBox SELECT_logBuffer;
+    private JTextField extract;
     private Project project;
     private final FileChooserDescriptor chooseFileOnlyDescriptor = FileChooserDescriptorFactory.createSingleLocalFileDescriptor();
     private Timer t;
@@ -245,6 +246,14 @@ public class LogViewerSetting extends JDialog {
             }else{
                 vl.setFilter(null);
             }
+
+            String extractText = extract.getText();
+            if(!extractText.equals("")){
+                vl.setExtract(extractText);
+            }else{
+                vl.setExtract(null);
+            }
+
             vl.setCharset(CharsetType.get((String)SELECT_charset.getSelectedItem()));
             //新增模式
             if(!editMode) {
@@ -269,6 +278,7 @@ public class LogViewerSetting extends JDialog {
                     viewLog.setCharset(vl.getCharset());
                     viewLog.setCycleBufferSize(vl.getCycleBufferSize());
                     viewLog.setFilter(vl.getFilter());
+                    viewLog.setExtract(vl.getExtract());
                     viewLog.setSeek(vl.isSeek());
                     viewLog.setSeekType(vl.getSeekType());
                     viewLog.setSeekPos(vl.getSeekPos());

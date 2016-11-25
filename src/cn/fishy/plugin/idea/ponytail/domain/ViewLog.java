@@ -21,6 +21,7 @@ public class ViewLog implements Serializable{
     private int nameStarter = 0;
     private CharsetType charset = CharsetType.UTF_8;
     private String filter;
+    private String extract;
     private int cycleBufferSize = SizeType.SMALLER.getSize();
     private int delay = 1000;
 
@@ -198,6 +199,16 @@ public class ViewLog implements Serializable{
 
     public String getFilter() {
         return filter;
+    }
+
+    public String getExtract()
+    {
+        return extract;
+    }
+
+    public void setExtract(String aInExtract)
+    {
+        extract = aInExtract;
     }
 
     public void setFilter(String filter) {
