@@ -15,9 +15,11 @@
  */
 package cn.fishy.plugin.idea.ponytail;
 
+import cn.fishy.plugin.idea.ponytail.colors.ColorFilter;
 import cn.fishy.plugin.idea.ponytail.constant.LogViewerIcons;
 import cn.fishy.plugin.idea.ponytail.constant.SeekType;
 import cn.fishy.plugin.idea.ponytail.domain.ViewLog;
+import cn.fishy.plugin.idea.ponytail.persistence.ColorFilterHolder;
 import cn.fishy.plugin.idea.ponytail.process.LogReader;
 import cn.fishy.plugin.idea.ponytail.process.TrackTimer;
 import cn.fishy.plugin.idea.ponytail.util.Matcher;
@@ -40,6 +42,8 @@ import com.intellij.openapi.editor.event.EditorMouseEvent;
 import com.intellij.openapi.editor.event.EditorMouseListener;
 import com.intellij.openapi.editor.ex.EditorMarkupModel;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
+import com.intellij.openapi.editor.markup.HighlighterTargetArea;
+import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
@@ -47,11 +51,13 @@ import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.util.EditorPopupHandler;
 import org.jetbrains.annotations.NotNull;
 
+import java.awt.Color;
 import java.awt.event.MouseEvent;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
+import java.util.regex.Pattern;
 
 
 /**
@@ -146,9 +152,80 @@ public class Console implements Disposable {
                 s = CharsetChanger.changeCharset(s, viewLog.getCharset().getName(), newCharset.name());
             }catch (Exception e){}
         }*/
+
+
+        s = extract(s);
         Document document = getConsoleEditor().getDocument();
         document.insertString(document.getTextLength(), s);
-        EditorUtil.scrollToTheEnd(getConsoleEditor());
+        if (isAutoScrollDown()) {
+            EditorUtil.scrollToTheEnd(getConsoleEditor());
+        }
+        applyColorToRow(document.getLineCount()-1, s);
+    }
+
+    public String extract(String s)
+    {
+        if (viewLog.getExtract() != null && !viewLog.getExtract().isEmpty())
+        {
+            java.util.regex.Matcher mr = Pattern.compile(viewLog.getExtract(), Pattern.DOTALL + Pattern.CASE_INSENSITIVE).matcher(s);
+            if (mr.find())
+            {
+                String lExtracted = mr.group(1);
+                StringBuilder lStringBuilder = new StringBuilder();
+                lStringBuilder.append(lExtracted);
+                String lResult = lStringBuilder.toString();
+                s = lResult;
+            }
+        }
+        return s;
+    }
+
+    public void addDivider()
+    {
+
+        Document document = getConsoleEditor().getDocument();
+        document.insertString(document.getTextLength(), "\n\n");
+        int row = document.getLineCount()-1;
+
+        if (isAutoScrollDown()) {
+            EditorUtil.scrollToTheEnd(getConsoleEditor());
+        }
+
+        TextAttributes lTextAttributes = new TextAttributes();
+        lTextAttributes.setBackgroundColor(Color.black);
+
+        int lineStartOffset = document.getLineStartOffset(Math.max(0, row - 1));
+        int lineEndOffset = document.getLineEndOffset(Math.max(0, row - 1));
+
+        getConsoleEditor().getMarkupModel().addRangeHighlighter(lineStartOffset,
+                                                                lineEndOffset,
+                                                                3333,
+                                                                lTextAttributes,
+                                                                HighlighterTargetArea.LINES_IN_RANGE);
+
+    }
+
+    private void applyColorToRow(int row, String s)
+    {
+        ColorFilterHolder lFilterRegistry = ColorFilterHolder.getInstance();
+        ColorFilter lColorFilter = lFilterRegistry.getMatch(s);
+        if (lColorFilter != null)
+        {
+            Document document = getConsoleEditor().getDocument();
+
+            TextAttributes lTextAttributes = new TextAttributes();
+            lTextAttributes.setBackgroundColor(lColorFilter.getBg());
+            lTextAttributes.setForegroundColor(lColorFilter.getFg());
+
+            int lineStartOffset = document.getLineStartOffset(Math.max(0, row - 1));
+            int lineEndOffset = document.getLineEndOffset(Math.max(0, row - 1));
+
+            getConsoleEditor().getMarkupModel().addRangeHighlighter(lineStartOffset,
+                                                                    lineEndOffset,
+                                                                    3333,
+                                                                    lTextAttributes,
+                                                                    HighlighterTargetArea.LINES_IN_RANGE);
+        }
     }
 
     /**

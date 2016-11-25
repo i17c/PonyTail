@@ -1,9 +1,5 @@
 package cn.fishy.plugin.idea.ponytail;
 
-import cn.fishy.plugin.idea.ponytail.constant.LogViewerIcons;
-import cn.fishy.plugin.idea.ponytail.domain.ViewLog;
-import cn.fishy.plugin.idea.ponytail.ui.LogViewerLayout;
-import cn.fishy.plugin.idea.ponytail.ui.LogViewerSetting;
 import com.intellij.ide.actions.ShowFilePathAction;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.ActionPlaces;
@@ -18,6 +14,12 @@ import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.VcsShowConfirmationOptionImpl;
 import com.intellij.util.ui.ConfirmationDialog;
+
+import cn.fishy.plugin.idea.ponytail.constant.LogViewerIcons;
+import cn.fishy.plugin.idea.ponytail.domain.ViewLog;
+import cn.fishy.plugin.idea.ponytail.ui.ColorFilterSetting;
+import cn.fishy.plugin.idea.ponytail.ui.LogViewerLayout;
+import cn.fishy.plugin.idea.ponytail.ui.LogViewerSetting;
 
 /**
  * User: duxing
@@ -40,6 +42,7 @@ public class ToolbarFactory {
     public ActionToolbar createToolbar() {
         DefaultActionGroup group = new DefaultActionGroup();
         group.add(new SettingsForLog());
+        group.add(new ColorFilterAction());
         group.add(new DirOpen());
         group.add(new LogDel());
         group.add(new LogAdd());
@@ -200,6 +203,17 @@ public class ToolbarFactory {
         @Override
         public void actionPerformed(AnActionEvent anActionEvent) {
             LogViewerSetting.pop(logViewerLayout);
+        }
+    }
+
+    public class ColorFilterAction extends AnAction implements DumbAware {
+        public ColorFilterAction() {
+            super("Color Filter Settings", "Settings For Color Filters", LogViewerIcons.setting2);
+        }
+
+        @Override
+        public void actionPerformed(AnActionEvent anActionEvent) {
+            ColorFilterSetting.pop(logViewerLayout.getConsole(), project);
         }
     }
 

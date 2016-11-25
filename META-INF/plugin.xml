@@ -1,7 +1,7 @@
 <idea-plugin version="2">
     <id>com.fishy.plugin.idea.ponytail</id>
     <name>PonyTail</name>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <vendor email="i17c.net@gmail.com" url="http://weibo.com/dxkkk">独行</vendor>
 
     <description><![CDATA[
@@ -41,6 +41,7 @@
         <applicationService serviceImplementation="cn.fishy.plugin.idea.ponytail.ui.LogViewerLayout"/>
         <applicationService serviceImplementation="cn.fishy.plugin.idea.ponytail.ui.LogViewerSetting"/>
         <applicationService serviceImplementation="cn.fishy.plugin.idea.ponytail.DefaultContentFactory"/>
+        <applicationService serviceImplementation="cn.fishy.plugin.idea.ponytail.persistence.ColorFilterHolder"/>
 
         <toolWindow id="PonyTail" anchor="bottom" secondary="true"
                     icon="/icons/printPreview.png" canCloseContents="true"
